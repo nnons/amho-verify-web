@@ -21,5 +21,8 @@
   "homepage": "https://github.com/nnons/halo-verify-web#readme",
   "devDependencies": {
     "react-app-rewired": "^2.2.1"
+  },
+  "dependencies": {
+    "node-sass": "^7.0.3"
   }
 }
