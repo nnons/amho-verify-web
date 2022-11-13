@@ -11,8 +11,8 @@ import { getChainData } from '../helpers/getChainData'
 import axios from 'axios'
 const ipfsHash = require('ipfs-only-hash')
 
-let BRIDGE_MINT_NOADDRESS_ENDPOINT = '';
-let BRIDGE_MINT_ENDPOINT = '';
+let BRIDGE_MINT_NOADDRESS_ENDPOINT = '/mint/noaddress';
+let BRIDGE_MINT_ENDPOINT = '/mint';
 
 if (process.env.NODE_ENV !== 'production') {
   BRIDGE_MINT_NOADDRESS_ENDPOINT = process.env.REACT_APP_BRIDGE_NODE + '/mint/noaddress'
