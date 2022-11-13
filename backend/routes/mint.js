@@ -24,7 +24,7 @@ router.post('/noaddress', function (req, res, next) {
   try {
     const data = req.body.data
     let { name, email, device } = data.message
-    if (device.addr == process.env.HW_ADDR_A) {
+    if (device.addr == (process.env.HW_ADDR_A || process.env.HW_ADDR_B)) {
       base('scans').create(
         [
           {
@@ -63,7 +63,7 @@ router.post('/', function (req, res, next) {
       signature: signature,
       version: sigUtils.SignTypedDataVersion.V4,
     })
-    if (device.addr == process.env.HW_ADDR) {
+    if (device.addr == (process.env.HW_ADDR_A || process.env.HW_ADDR_B)) {
       base('scans').create(
         [
           {
