@@ -11,8 +11,13 @@ import { getChainData } from '../helpers/getChainData'
 import axios from 'axios'
 const ipfsHash = require('ipfs-only-hash')
 
-const BRIDGE_MINT_NOADDRESS_ENDPOINT = process.env.REACT_APP_BRIDGE_NODE + '/mint/noaddress'
-const BRIDGE_MINT_ENDPOINT = process.env.REACT_APP_BRIDGE_NODE + '/mint'
+let BRIDGE_MINT_NOADDRESS_ENDPOINT = '';
+let BRIDGE_MINT_ENDPOINT = '';
+
+if (process.env.NODE_ENV !== 'production') {
+  BRIDGE_MINT_NOADDRESS_ENDPOINT = process.env.REACT_APP_BRIDGE_NODE + '/mint/noaddress'
+  BRIDGE_MINT_ENDPOINT = process.env.REACT_APP_BRIDGE_NODE + '/mint'
+}
 // TODO: allow the user to select a chain id
 const { chainId } = walletStore.getState()
 
