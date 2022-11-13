@@ -1,0 +1,25 @@
+{
+  "name": "amho-verify-web",
+  "version": "1.0.0",
+  "description": "This app scans HaLo NFC chip. A HaLo is a \"hardware locked\" cryptographic asset such as a print, collectable or merchandise. HaLo chips can be scanned via NFC to authenticate the asset as well as make any claims for fungible or non-fungbile assets if available.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "cd backend && npm install && npm start",
+    "heroku-postbuild": "cd frontend && npm install && npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nnons/halo-verify-web.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nnons/halo-verify-web/issues"
+  },
+  "homepage": "https://github.com/nnons/halo-verify-web#readme",
+  "devDependencies": {
+    "react-app-rewired": "^2.2.1"
+  }
+}
