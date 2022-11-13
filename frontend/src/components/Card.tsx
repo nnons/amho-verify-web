@@ -3,7 +3,7 @@ import classNames from 'classnames'
 import { Link } from 'react-router-dom'
 
 import { ReactComponent as ChevronLeft } from '../svg/chevron-left.svg'
-import { ReactComponent as Loading } from '../svg/loading.svg'
+// import { ReactComponent as Loading } from '../svg/loading.svg'
 
 interface IProps {
   children?: React.ReactNode

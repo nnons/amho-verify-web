@@ -71,4 +71,18 @@
   &.pink-gradient {
     background: linear-gradient(95.58deg, #fffcef -12.66%, #ffb9d2 54.5%, #ffd28f 108.52%);
   }
+  &.blue-gradient {
+    margin-top: 16px;
+    background:linear-gradient(45deg, #62bce0, #00ACEE, #00ACEE, #00ACEE, #62bce0);
+    & {
+      color: $white;
+    }
+  }
+}
+
+.twitter-button {
+  display: inline-flex;
+  svg {
+    padding: 5px 5px 0 0;
+  }
 }

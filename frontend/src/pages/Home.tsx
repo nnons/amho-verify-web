@@ -80,7 +80,7 @@ export default function Home() {
               <br />
               Detected
             </h1>
-            <p className="text-white text-sm mt-4 mb-4">Tap link below to sign up for AMHO whitelist.</p>
+            <p className="text-white text-sm mt-4 mb-4">Tap link below to sign up for QURIE PARK whitelist.</p>
             <h3 className="font-normal mt-4 mb-1 text-white text-xs">Device ID</h3>
             <p className="break-word font-bold text-white text-smb">{keys?.primaryPublicKeyHash}</p>
           </>

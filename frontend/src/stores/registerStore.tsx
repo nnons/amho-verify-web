@@ -31,12 +31,15 @@ type TRegisterStore = {
   success: boolean
   loading: boolean
   registered: boolean
+  twitterVerified: boolean
   signed: boolean
   signing: boolean
   message: string
   registerForm: {
     name: string
     email: string
+    twitter: string
+    instagram: string
     // imageSrc: string
     // image: any
   }
@@ -59,13 +62,15 @@ type TRegisterStore = {
 const registerStore = create<TRegisterStore>((set) => ({
   urlMode: false,
   base64Image: false,
-  noAccount: false,
+  twitterVerified: false,
   loading: false,
   previewing: false,
   registered: false,
   registerForm: {
     name: '',
     email: '',
+    twitter: '',
+    instagram: ''
     // imageSrc: '',
     // image: null,
   },

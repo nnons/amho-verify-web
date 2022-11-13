@@ -6,7 +6,7 @@ interface IProps {
   children?: React.ReactNode
   fullWidth?: boolean
   disabled?: boolean
-  color?: 'black' | 'pink-gradient' | 'black-line' | 'white-line'
+  color?: 'black' | 'pink-gradient' | 'black-line' | 'white-line' | 'blue-gradient'
   size?: 'regular' | 'small'
   href?: string
   to?: string
