@@ -7,7 +7,6 @@ if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config({ path: '.env' })
 }
 
-// Configure airtable with api
 airtable.configure({
   apiKey: process.env.AIRTABLE_API_KEY,
 })

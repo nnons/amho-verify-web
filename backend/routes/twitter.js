@@ -11,7 +11,6 @@ if (process.env.NODE_ENV !== "production") {
 
 const getTwitterData = async (sig) => {
   const client = new Client(process.env.TWITTER_BEARER_TOKEN);
-  // YYYY-MM-DDTHH:mm:ssZ
   dayjs.extend(utc)
   const startTimeQuery = dayjs().subtract(5, 'minute').format('YYYY-MM-DDTHH:mm:ssZ');
   const endTimeQuery = dayjs().add(5, 'minute').format('YYYY-MM-DDTHH:mm:ssZ');
@@ -26,12 +25,9 @@ const getTwitterData = async (sig) => {
 };
 
 router.post("/check", async function (req, res, next) {
-  // Check endpoint
   const data = req.body.data;
   const { device } = data.message;
   const client_signature = req.body.signature;
-
-  // GET FROM API
 
   if (device.addr == (process.env.HW_ADDR_A || process.env.HW_ADDR_B)) {
     const server_signature = await getTwitterData(client_signature);
@@ -57,10 +53,6 @@ router.post("/check", async function (req, res, next) {
       res.send(200);
     }
   }
-});
-
-router.post("/", function (req, res, next) {
-  //
 });
 
 module.exports = router;
