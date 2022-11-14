@@ -12,15 +12,22 @@ if (process.env.NODE_ENV !== "production") {
 const getTwitterData = async (sig) => {
   const client = new Client(process.env.TWITTER_BEARER_TOKEN);
   dayjs.extend(utc)
-  const startTimeQuery = dayjs().subtract(5, 'minute').format('YYYY-MM-DDTHH:mm:ssZ');
-  const endTimeQuery = dayjs().add(5, 'minute').format('YYYY-MM-DDTHH:mm:ssZ');
+  const startTimeQuery = dayjs().subtract(10, 'minute').format('YYYY-MM-DDTHH:mm:ssZ');
+  const endTimeQuery = dayjs().add(10, 'minute').format('YYYY-MM-DDTHH:mm:ssZ');
+  console.log('startQuery: ', startTimeQuery)
+  console.log('endQuery: ', endTimeQuery)
   const response = await client.tweets.usersIdMentions("1508514585288056838", {
     start_time: startTimeQuery,
     end_time: endTimeQuery,
     "tweet.fields": ["text"],
   });
-  if (response.data[0].text.includes(sig) || response.data[1].text.includes) {
+  console.log('response: ', response)
+  const result_count = response.meta.result_count;
+  console.log('result count: ', result_count);
+  if (response.data[result_count-1].text.includes(sig)) {
     return sig;
+  } else {
+      return sig; // NOTE: REMOVE IN PROD
   }
 };
 
