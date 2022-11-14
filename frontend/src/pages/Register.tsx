@@ -13,19 +13,6 @@ export default function Register() {
   const [recordClick, setRecordClick] = useState(false)
   const rs = registerStore()
   const ds = deviceStore()
-  const setPostToTwitter = registerStore((r) => r.setPostToTwitter)
-  const formatTwitterSig = registerStore((r) => r.formatTwitterSig)
-  const signHaloTwitter = registerStore((r) => r.signHaloTwitter)
-  const checkTwitter = registerStore((r) => r.checkTwitter)
-
-  // const handleFileChange = (e: any) => {
-  //   const file = e.target.files[0]
-  //   file.size < 5000001 ? rs.changeFileField(file) : alert('Media must be 5mb in size or less')
-  // }
-
-  // NOTE: Removed to allow users to scan without wallet
-  // if (!ds.device) return <Navigate to="/" />
-
   if (rs.sigSplit && rs.block) return <Navigate to="/twitter" />
 
   return (

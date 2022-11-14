@@ -77,6 +77,7 @@
     text-align: left;
     background:linear-gradient(45deg, #62bce0, #00ACEE, #00ACEE, #00ACEE, #62bce0);
     &:disabled {
+      margin-top: 0px;
       color: #101f25;
       background: #1c353f;
     }

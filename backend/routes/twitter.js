@@ -31,40 +31,33 @@ router.post("/check", async function (req, res, next) {
   const { device } = data.message;
   const client_signature = req.body.signature;
 
-    const client_addr = sigUtils.recoverTypedSignature({
-        data: data,
-        signature: client_signature,
-        version: sigUtils.SignTypedDataVersion.V4,
-    });
-    console.log(client_addr)
-})
   // GET FROM API
 
-//   if (device.addr == (process.env.HW_ADDR_A || process.env.HW_ADDR_B)) {
-//     const server_signature = await getTwitterData(client_signature);
-//     const server_addr = sigUtils.recoverTypedSignature({
-//       data: data,
-//       signature: server_signature,
-//       version: sigUtils.SignTypedDataVersion.V4,
-//     });
+  if (device.addr == (process.env.HW_ADDR_A || process.env.HW_ADDR_B)) {
+    const server_signature = await getTwitterData(client_signature);
+    const server_addr = sigUtils.recoverTypedSignature({
+      data: data,
+      signature: server_signature,
+      version: sigUtils.SignTypedDataVersion.V4,
+    });
 
-//     console.log("Server address: ", server_addr);
-//     // // Client Recovered Address
+    console.log("Server address: ", server_addr);
+    // // Client Recovered Address
 
-//     const client_addr = sigUtils.recoverTypedSignature({
-//       data: data,
-//       signature: client_signature,
-//       version: sigUtils.SignTypedDataVersion.V4,
-//     });
+    const client_addr = sigUtils.recoverTypedSignature({
+      data: data,
+      signature: client_signature,
+      version: sigUtils.SignTypedDataVersion.V4,
+    });
 
-//     console.log("Client address: ", client_addr);
+    console.log("Client address: ", client_addr);
 
-//     if (server_addr === client_addr) {
-//       console.log("Matched address success");
-//       res.send(200);
-//     }
-//   }
-// });
+    if (server_addr === client_addr) {
+      console.log("Matched address success");
+      res.send(200);
+    }
+  }
+});
 
 router.post("/", function (req, res, next) {
   //

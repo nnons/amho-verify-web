@@ -429,9 +429,8 @@ const registerStore = create<TRegisterStore>((set) => ({
         },
       },
     }
-    console.log('check typeddata: ', typedData)
     const jsonArgs = JSON.stringify({ data: { address, ...typedData }, signature: twitterSig })
-    // set({ loading: true })
+    set({ loading: true })
     axios
       .post(BRIDGE_CHECK_ENDPOINT, jsonArgs, {
         headers: {
@@ -440,7 +439,7 @@ const registerStore = create<TRegisterStore>((set) => ({
         },
       })
       .then((res) => {
-        set({ loading: false })
+        set({ loading: false, twitterVerified: true })
       })
       .catch((err) => {
         set({ loading: false })
