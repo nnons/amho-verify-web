@@ -6,13 +6,14 @@ interface IProps {
   children?: React.ReactNode
   fullWidth?: boolean
   disabled?: boolean
-  color?: 'black' | 'pink-gradient' | 'black-line' | 'white-line' | 'blue-gradient'
+  color?: 'black' | 'pink-gradient' | 'black-line' | 'white-line' | 'blue-gradient' | 'twitter-disabled'
   size?: 'regular' | 'small'
   href?: string
   to?: string
-  onClick?(): void
+  onClick?(event: React.MouseEvent<HTMLElement>): void
   className?: string
 }
+
 
 export default function Button({
   children,
@@ -29,7 +30,7 @@ export default function Button({
 
   if (href) {
     return (
-      <a href={href} target="_blank" rel="noreferrer" className={cls}>
+      <a onClick={onClick} href={href} target="_blank" rel="noreferrer" className={cls}>
         {children}
       </a>
     )

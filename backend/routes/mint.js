@@ -1,16 +1,11 @@
 var express = require('express')
 var router = express.Router()
 var sigUtils = require('@metamask/eth-sig-util')
-var { ThirdwebSDK } = require('@thirdweb-dev/sdk')
 var airtable = require('airtable')
 
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config({ path: '.env' })
 }
-
-// Initialize SDK
-const sdk = new ThirdwebSDK('mumbai')
-const contract = sdk.getContract('0x48Ea08f634e063D113bC3b05c618910939dA8674', 'edition')
 
 // Configure airtable with api
 airtable.configure({

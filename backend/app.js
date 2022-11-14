@@ -7,6 +7,7 @@ var cors = require('cors')
 
 var indexRouter = require('./routes/index')
 var mintRouter = require('./routes/mint')
+var twitterRouter = require('./routes/twitter')
 
 var app = express()
 
@@ -28,6 +29,7 @@ app.use(express.urlencoded({ extended: false }))
 app.use(cookieParser())
 app.use(express.static(path.join(__dirname, 'public')))
 
+app.use('/twitter', twitterRouter)
 app.use('/mint', mintRouter)
 app.use('/', indexRouter)
 

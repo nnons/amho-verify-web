@@ -64,7 +64,6 @@
       "react-app/jest"
     ]
   },
-  "proxy": "http://localhost:3001",
   "engines": {
     "node": "14.x"
   },

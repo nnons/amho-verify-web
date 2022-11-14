@@ -71,9 +71,15 @@
   &.pink-gradient {
     background: linear-gradient(95.58deg, #fffcef -12.66%, #ffb9d2 54.5%, #ffd28f 108.52%);
   }
+
   &.blue-gradient {
     margin-top: 16px;
+    text-align: left;
     background:linear-gradient(45deg, #62bce0, #00ACEE, #00ACEE, #00ACEE, #62bce0);
+    &:disabled {
+      color: #101f25;
+      background: #1c353f;
+    }
     & {
       color: $white;
     }
@@ -85,4 +91,11 @@
   svg {
     padding: 5px 5px 0 0;
   }
+}
+
+.twitter-disabled {
+      margin-top: 16px;
+      color: #101f25;
+      background: #1c353f;
+      text-align: left;
 }

@@ -9,14 +9,16 @@ import formatMinterSig from '../helpers/formatMinterSig'
 import generateCmd from '../helpers/generateCMD'
 import { getChainData } from '../helpers/getChainData'
 import axios from 'axios'
-const ipfsHash = require('ipfs-only-hash')
+// const ipfsHash = require('ipfs-only-hash')
 
-let BRIDGE_MINT_NOADDRESS_ENDPOINT = '/mint/noaddress';
-let BRIDGE_MINT_ENDPOINT = '/mint';
+let BRIDGE_MINT_NOADDRESS_ENDPOINT = '/mint/noaddress'
+let BRIDGE_MINT_ENDPOINT = '/mint'
+let BRIDGE_CHECK_ENDPOINT = '/twitter/check'
 
 if (process.env.NODE_ENV !== 'production') {
-  BRIDGE_MINT_NOADDRESS_ENDPOINT = process.env.REACT_APP_BRIDGE_NODE + '/mint/noaddress'
-  BRIDGE_MINT_ENDPOINT = process.env.REACT_APP_BRIDGE_NODE + '/mint'
+  BRIDGE_MINT_NOADDRESS_ENDPOINT = process.env.REACT_APP_BRIDGE_NODE + BRIDGE_MINT_NOADDRESS_ENDPOINT
+  BRIDGE_MINT_ENDPOINT = process.env.REACT_APP_BRIDGE_NODE + BRIDGE_MINT_ENDPOINT
+  BRIDGE_CHECK_ENDPOINT = process.env.REACT_APP_BRIDGE_NODE + BRIDGE_CHECK_ENDPOINT
 }
 // TODO: allow the user to select a chain id
 const { chainId } = walletStore.getState()
@@ -29,9 +31,12 @@ type TRegisterStore = {
   base64Image: any
   previewing: boolean
   success: boolean
+  postedToTwitter: boolean
   loading: boolean
   registered: boolean
   twitterVerified: boolean
+  twitterSig: string
+  twitterMsg: string
   signed: boolean
   signing: boolean
   message: string
@@ -53,7 +58,11 @@ type TRegisterStore = {
   imageSrcSubmit(): void
   clearImage(): void
   setLoading(loading: boolean): void
+  setPostToTwitter(): void
+  formatTwitterSig(msg: string): string
+  checkTwitter(): void
   signHalo(): void
+  signHaloTwitter(): void
   signHaloNoAddr(): void
   scanHalo(): void
   registerHalo(): void
@@ -63,6 +72,9 @@ const registerStore = create<TRegisterStore>((set) => ({
   urlMode: false,
   base64Image: false,
   twitterVerified: false,
+  twitterSig: '',
+  twitterMsg: '',
+  postedToTwitter: false,
   loading: false,
   previewing: false,
   registered: false,
@@ -70,9 +82,7 @@ const registerStore = create<TRegisterStore>((set) => ({
     name: '',
     email: '',
     twitter: '',
-    instagram: ''
-    // imageSrc: '',
-    // image: null,
+    instagram: '',
   },
   sigMsg: '',
   sigSplit: false,
@@ -85,6 +95,15 @@ const registerStore = create<TRegisterStore>((set) => ({
 
   setLoading: (loading) => {
     set({ loading })
+  },
+  setPostToTwitter: () => {
+    set({postedToTwitter: true});
+  },
+
+  formatTwitterSig: (sig): string => {
+    const twitterMsg = `Verifying my identity and Proof of Scan for @AMHOLTD \n\nsig:${sig}`
+    set({ twitterSig: sig, twitterMsg })
+    return twitterMsg
   },
 
   changeRegisterField: (key, value) => {
@@ -128,11 +147,7 @@ const registerStore = create<TRegisterStore>((set) => ({
     set((state) => ({
       registerForm: {
         ...state.registerForm,
-        // image: false,
-        // imageSrc: '',
       },
-      // base64Image: '',
-      // previewing: false,
     }))
   },
 
@@ -187,6 +202,70 @@ const registerStore = create<TRegisterStore>((set) => ({
       .then((res) => {
         set({ loading: false, success: true, message: 'Mint successful! Retrieving record.' })
       })
+  },
+
+  signHaloTwitter: async () => {
+    console.log(`sign twitter called`)
+    const { keys, device } = deviceStore.getState()
+    const { address, chainId } = walletStore.getState()
+    const { name, email } = registerStore.getState().registerForm
+    const { block, sigMsg, sigSplit } = registerStore.getState()
+
+    const device_id = keys?.primaryPublicKeyHash.substring(2)
+    const device_addr = device?.device_address
+    const device_token_metadata = { name, email }
+
+    const typedData = {
+      types: {
+        EIP712Domain: [
+          { name: 'name', type: 'string' },
+          { name: 'version', type: 'string' },
+          { name: 'chainId', type: 'uint256' },
+        ],
+        Device: [
+          { name: 'id', type: 'string' },
+          { name: 'addr', type: 'address' },
+          { name: 'signatureR', type: 'string' },
+          { name: 'signatureS', type: 'string' },
+          { name: 'digest', type: 'string' },
+        ],
+        Media: [
+          { name: 'name', type: 'string' },
+          { name: 'email', type: 'string' },
+          { name: 'minter', type: 'address' },
+          { name: 'device', type: 'Device' },
+        ],
+      },
+      primaryType: 'Media',
+      domain: {
+        name: 'ERS',
+        version: '0.1.0',
+        chainId: chainId,
+      },
+      message: {
+        // cid: ipfsCid,
+        name: device_token_metadata.name,
+        email: device_token_metadata.email,
+        minter: address || '0x0',
+        device: {
+          id: device_id,
+          addr: device_addr,
+          signatureR: sigSplit.r,
+          signatureS: sigSplit.s,
+          digest: sigMsg,
+        },
+      },
+    }
+    console.log('Typed data: ', typedData)
+    const msgParams = [
+      address, // Required
+      JSON.stringify(typedData), // Required
+    ]
+
+    connector.signTypedData(msgParams).then((result) => {
+      const formatSig = registerStore.getState().formatTwitterSig(result)
+      set({ loading: false, twitterSig: result, twitterMsg: formatSig})
+    })
   },
 
   signHalo: async () => {
@@ -249,10 +328,6 @@ const registerStore = create<TRegisterStore>((set) => ({
       address, // Required
       JSON.stringify(typedData), // Required
     ]
-    let msgParamsWithoutAddr = [
-      address, // Required for wallet connect
-      JSON.stringify(typedData), // Required
-    ]
     connector
       .signTypedData(msgParams)
       .then((result) => {
@@ -270,13 +345,13 @@ const registerStore = create<TRegisterStore>((set) => ({
           minter_chain_id: chainId,
         }
 
-        function getFormData(object: any) {
-          const formData = new FormData()
-          Object.keys(object).forEach((key) => formData.append(key, object[key]))
-          return formData
-        }
+        // function getFormData(object: any) {
+        //   const formData = new FormData()
+        //   Object.keys(object).forEach((key) => formData.append(key, object[key]))
+        //   return formData
+        // }
 
-        const form = getFormData(data)
+        // const form = getFormData(data)
 
         const jsonArgs = JSON.stringify({ data: { address, ...typedData }, signature: result })
 
@@ -303,6 +378,76 @@ const registerStore = create<TRegisterStore>((set) => ({
       })
   },
 
+  checkTwitter: () => {
+    const { twitterSig } = registerStore.getState()
+    const { keys, device } = deviceStore.getState()
+    const { address, chainId } = walletStore.getState()
+    const { name, email } = registerStore.getState().registerForm
+    const { block, sigMsg, sigSplit } = registerStore.getState()
+
+    const device_id = keys?.primaryPublicKeyHash.substring(2)
+    const device_addr = device?.device_address
+    const device_token_metadata = { name, email }
+    const typedData = {
+      types: {
+        EIP712Domain: [
+          { name: 'name', type: 'string' },
+          { name: 'version', type: 'string' },
+          { name: 'chainId', type: 'uint256' },
+        ],
+        Device: [
+          { name: 'id', type: 'string' },
+          { name: 'addr', type: 'address' },
+          { name: 'signatureR', type: 'string' },
+          { name: 'signatureS', type: 'string' },
+          { name: 'digest', type: 'string' },
+        ],
+        Media: [
+          { name: 'name', type: 'string' },
+          { name: 'email', type: 'string' },
+          { name: 'minter', type: 'address' },
+          { name: 'device', type: 'Device' },
+        ],
+      },
+      primaryType: 'Media',
+      domain: {
+        name: 'ERS',
+        version: '0.1.0',
+        chainId: chainId,
+      },
+      message: {
+        // cid: ipfsCid,
+        name: device_token_metadata.name,
+        email: device_token_metadata.email,
+        minter: address || '0x0',
+        device: {
+          id: device_id,
+          addr: device_addr,
+          signatureR: sigSplit.r,
+          signatureS: sigSplit.s,
+          digest: sigMsg,
+        },
+      },
+    }
+    console.log('check typeddata: ', typedData)
+    const jsonArgs = JSON.stringify({ data: { address, ...typedData }, signature: twitterSig })
+    // set({ loading: true })
+    axios
+      .post(BRIDGE_CHECK_ENDPOINT, jsonArgs, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Bypass-Tunnel-Reminder': 'PASS',
+        },
+      })
+      .then((res) => {
+        set({ loading: false })
+      })
+      .catch((err) => {
+        set({ loading: false })
+        alert('Something went wrong post.')
+        console.log(err)
+      })
+  },
   registerHalo: () => {
     set({ loading: true })
   },
