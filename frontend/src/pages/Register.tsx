@@ -1,16 +1,12 @@
-import classNames from 'classnames'
-import React, { useEffect, useState } from 'react'
-import { Link, Navigate } from 'react-router-dom'
+import React from 'react'
+import { Navigate } from 'react-router-dom'
 import Button from '../components/Button'
 import Card, { CardBack, CardFooter, CardPadding } from '../components/Card'
 import Field from '../components/Field'
-// import GrayCenterBox from '../components/GrayCenterBox'
-// import { ReactComponent as VerifiedIcon } from '../svg/verified.svg'
 import deviceStore from '../stores/deviceStore'
 import registerStore from '../stores/registerStore'
 
 export default function Register() {
-  const [recordClick, setRecordClick] = useState(false)
   const rs = registerStore()
   const ds = deviceStore()
   if (rs.sigSplit && rs.block && ds.nowallet) return <Navigate to="/confirm" />

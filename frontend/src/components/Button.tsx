@@ -3,7 +3,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 
 interface IProps {
-  children?: React.ReactNode
+  children?: any
   fullWidth?: boolean
   disabled?: boolean
   color?: 'black' | 'pink-gradient' | 'black-line' | 'white-line' | 'blue-gradient' | 'twitter-disabled'

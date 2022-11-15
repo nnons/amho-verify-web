@@ -1,13 +1,7 @@
 import React, { useEffect } from 'react'
 import Card, { CardPadding } from '../components/Card'
-import Badge from '../components/Badge'
-import Divider from '../components/Divider'
 import deviceStore from '../stores/deviceStore'
-import { Navigate } from 'react-router-dom'
-import Loading from '../components/Loading'
 import registerStore from '../stores/registerStore'
-import formatDescription from '../helpers/formatDescription'
-import truncateAddress from '../helpers/truncateAddress'
 import walletStore from '../stores/walletStore'
 import { getChainData } from '../helpers/getChainData'
 
