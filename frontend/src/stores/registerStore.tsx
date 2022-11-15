@@ -97,7 +97,10 @@ const registerStore = create<TRegisterStore>((set) => ({
     set({ loading })
   },
   setPostToTwitter: () => {
-    set({postedToTwitter: true});
+    set({loading: true, postedToTwitter: true});
+    setTimeout(() => {
+      set({loading: false})
+    }, 15000)
   },
 
   formatTwitterSig: (sig): string => {
@@ -172,15 +175,16 @@ const registerStore = create<TRegisterStore>((set) => ({
     const device_id = keys?.primaryPublicKeyHash.substring(2)
     const device_addr = device?.device_address
 
-    const { name, email } = registerStore.getState().registerForm
-    const device_token_metadata = { name, email }
+    const { name, email, twitter, instagram } = registerStore.getState().registerForm
     const { sigMsg, sigSplit } = registerStore.getState()
 
     const typedData = {
       message: {
         // cid: ipfsCid,
-        name: device_token_metadata.name,
-        email: device_token_metadata.email,
+        name,
+        email,
+        twitter,
+        instagram,
         device: {
           id: device_id,
           addr: device_addr,

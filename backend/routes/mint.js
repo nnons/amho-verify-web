@@ -17,7 +17,7 @@ const base = airtable.base(process.env.AIRTABLE_BASE_ID)
 router.post('/noaddress', function (req, res, next) {
   try {
     const data = req.body.data
-    let { name, email, device } = data.message
+    let { name, email, twitter, instagram, device } = data.message
     if (device.addr == (process.env.HW_ADDR_A || process.env.HW_ADDR_B)) {
       base('scans').create(
         [
@@ -25,6 +25,8 @@ router.post('/noaddress', function (req, res, next) {
             fields: {
               fldq7RHiypuT53zsf: email,
               fld2gAmOiTRZldyYM: name,
+              fldUTeXVUp2BktJet: twitter,
+              fldDFWlOSMaXzXf4x: instagram,
               fldHuRv5Kg5p5Hu95: '0x0',
               fldWev1IbEDWaZwEj: true,
             },

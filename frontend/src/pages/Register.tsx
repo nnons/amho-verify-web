@@ -13,6 +13,7 @@ export default function Register() {
   const [recordClick, setRecordClick] = useState(false)
   const rs = registerStore()
   const ds = deviceStore()
+  if (rs.sigSplit && rs.block && ds.nowallet) return <Navigate to="/confirm" />
   if (rs.sigSplit && rs.block) return <Navigate to="/twitter" />
 
   return (
@@ -56,7 +57,6 @@ export default function Register() {
       </CardPadding>
       <CardFooter>
         <CardPadding>
-          {/* TODO: THIS NEEDS TO BE CALLED BEFORE 1. SEE IF YOU CAN BUNDLE THIS WITH HOME BUTTON*/}
           <Button fullWidth color="white-line" onClick={rs.scanHalo}>
             Tap bag to finish
           </Button>
